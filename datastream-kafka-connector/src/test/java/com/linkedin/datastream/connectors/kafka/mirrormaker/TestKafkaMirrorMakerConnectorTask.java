@@ -132,8 +132,7 @@ public class TestKafkaMirrorMakerConnectorTask extends BaseKafkaZkTest {
   public void testConsumeFromMultipleTopicsWithDestinationTopicPrefixMetadata() throws Exception {
     String yummyTopic = "YummyPizza";
     String saltyTopic = "SaltyPizza";
-    String saladTopic = "HealthySalad";
-
+    String saladTopic = "HealthySalad
     String destinationTopicPrefixOverride = "newPrefix";
 
     createTopic(_zkUtils, saladTopic);
@@ -164,7 +163,7 @@ public class TestKafkaMirrorMakerConnectorTask extends BaseKafkaZkTest {
     List<DatastreamProducerRecord> records = datastreamProducer.getEvents();
     for (DatastreamProducerRecord record : records) {
       String destinationTopic = record.getDestination().get();
-      Assert.assertTrue(destinationTopic.endsWith("Pizza"),
+      Assert.assertTrue(destinationTopic.endsWith(destinationTopicPrefixOverride),
           "Unexpected event consumed from Datastream and sent to topic: " + destinationTopic);
       Assert.assertTrue(destinationTopic.startsWith(destinationTopicPrefixOverride),
           "Destination topic prefix enabled, topic should start with prefix. Topic: " + destinationTopic);

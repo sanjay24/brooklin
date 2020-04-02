@@ -81,6 +81,13 @@ public class KafkaConnector extends AbstractKafkaConnector {
         }
       }
 
+      if (hasWildCards(parsed)) {
+        String msg =
+                String.format("Wildcard characters are Not Allowed %s.", connectionString);
+        LOG.error(msg);
+        throw new DatastreamValidationException(msg);
+      }
+
       if (!isWhiteListedCluster(parsed)) {
         String msg =
             String.format("Kafka connector is not white-listed for the cluster %s. Current white-listed clusters %s.",
@@ -140,6 +147,29 @@ public class KafkaConnector extends AbstractKafkaConnector {
 
   private Boolean isWhiteListedCluster(KafkaConnectionString connectionStr) {
     return _whiteListedBrokers.isEmpty() || connectionStr.getBrokers().stream().anyMatch(_whiteListedBrokers::contains);
+  }
+
+  private Boolean hasWildCards(KafkaConnectionString connectionStr) {
+    String topicName = connectionStr.getTopicName();
+
+    if (topicName == null || topicName.equals("")) {
+      return false;
+    }
+    boolean hasWildChar = false;
+
+    String specialChars = "*?.";
+    for (int specialIndex = 0; specialIndex < specialChars.length(); specialIndex++) {
+      // only allow escaped special chars
+      char prev = topicName.charAt(0);
+      for (int stringIndex = 1; stringIndex < topicName.length(); stringIndex++) {
+        if (topicName.charAt(stringIndex) == specialChars.charAt(specialIndex) && prev != '\\') {
+          hasWildChar = true;
+          break;
+        }
+        prev = topicName.charAt(stringIndex);
+      }
+    }
+    return hasWildChar;
   }
 
   @Override

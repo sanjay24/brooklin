@@ -1,5 +1,5 @@
 allprojects {
-  version = "1.0.3-SNAPSHOT"
+  version = "SINGLE_TOPIC_RENAME"
 }
 
 subprojects {

@@ -148,7 +148,7 @@ public class KafkaMirrorMakerConnectorTask extends AbstractKafkaBasedConnectorTa
       LOG.info("Enable Brooklin partition assignment");
     }
 
-    LOG.info("Destination topic prefix has been set to {}", _destinationTopicPrefix);
+    LOG.info("Destination topic will be renamed to to {}", _destinationTopicPrefix);
 
     if (_isFlushlessModeEnabled) {
       _flushlessProducer = new FlushlessEventProducerHandler<>(_producer);
@@ -244,7 +244,7 @@ public class KafkaMirrorMakerConnectorTask extends AbstractKafkaBasedConnectorTa
     builder.setDestination(_datastreamTask.getDatastreamDestination()
         .getConnectionString()
         .replace(KafkaMirrorMakerConnector.MM_TOPIC_PLACEHOLDER,
-            StringUtils.isBlank(_destinationTopicPrefix) ? topic : _destinationTopicPrefix + topic));
+            StringUtils.isBlank(_destinationTopicPrefix) ? topic : _destinationTopicPrefix));
     if (_isIdentityMirroringEnabled) {
       builder.setPartition(partition);
     }
